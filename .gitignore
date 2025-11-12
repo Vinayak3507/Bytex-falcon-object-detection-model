@@ -1,0 +1,16 @@
+# Ignore large or system-specific files
+__pycache__/
+*.pt
+*.zip
+*.DS_Store
+falcon_env/
+runs/
+train1/images/
+train1/labels/
+val1/images/
+val1/labels/
+test1/images/
+test1/labels/
+
+# Ignore notebook checkpoints
+.ipynb_checkpoints/

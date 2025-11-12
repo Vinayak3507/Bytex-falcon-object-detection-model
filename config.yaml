@@ -1,0 +1,20 @@
+# Falcon 7-Class Object Detection Challenge
+
+path: /Users/vinayakdixit/Desktop/train_1
+train: train1/images
+val: val1/images
+test: test1/images
+
+# Number of classes
+nc: 7
+
+# Class names
+names: [
+  "OxygenTank",
+  "NitrogenTank",
+  "FireExtinguisher",
+  "FireAlarm",
+  "SafetySwitchPanel",
+  "EmergencyPhone",
+  "FirstAidBox"
+]
