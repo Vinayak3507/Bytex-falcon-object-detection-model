@@ -1,9 +1,10 @@
 import streamlit as st
+import os
+os.environ["OPENCV_VIDEOIO_PRIORITY_MSMF"] = "0"
 from ultralytics import YOLO
 import pandas as pd
 import numpy as np
 from PIL import Image
-import os
 import io
 
 # =========================================
