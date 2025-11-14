@@ -2,7 +2,7 @@
 HackBeyond: Space Station Object Detection Challenge  
 
 ## Team Name  
-**Bytex**
+## **Bytex**
 
 ## Team Members  
 - Vinayak Dixit  (LEADER)
