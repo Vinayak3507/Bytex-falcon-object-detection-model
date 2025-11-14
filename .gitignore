@@ -1,6 +1,4 @@
-# Ignore large or system-specific files
 __pycache__/
-*.pt
 *.zip
 *.DS_Store
 falcon_env/
