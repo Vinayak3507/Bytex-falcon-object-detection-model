@@ -67,5 +67,5 @@ https://bytexobjectdetectionmodel.streamlit.app/
 ---
 
 
-# Repository Structure
+# Made By BYTEX ❤️
 
