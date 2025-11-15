@@ -59,5 +59,13 @@ All training metrics, including class distribution and results CSV, are availabl
 
 ---
 
+
+## 🔗 Live Streamlit App  
+https://bytexobjectdetectionmodel.streamlit.app/
+
+
+---
+
+
 # Repository Structure
 
