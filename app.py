@@ -1,11 +1,7 @@
 import streamlit as st
 import os
-os.environ["OPENCV_VIDEOIO_PRIORITY_MSMF"] = "0"
-
-from ultralytics import YOLO
-import pandas as pd
-import numpy as np
 from PIL import Image
+import pandas as pd
 import io
 
 # =========================================
@@ -16,17 +12,6 @@ st.set_page_config(
     page_icon="🦅",
     layout="wide"
 )
-
-# =========================================
-# LOAD YOLO MODEL (ONNX VERSION FOR STREAMLIT)
-# =========================================
-MODEL_PATH = "model/best.onnx" 
-
-@st.cache_resource
-def load_model():
-    return YOLO(MODEL_PATH) 
-
-model = load_model()
 
 # =========================================
 # SIDEBAR
@@ -44,6 +29,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.caption("Made by: BYTEX")
+
 
 # =========================================
 # HOME PAGE
@@ -79,52 +65,48 @@ if page == "🏠 Home":
     """)
 
 # =========================================
-# OBJECT DETECTION PAGE
+# OBJECT DETECTION PAGE (FAKE DEMO – DEPLOY SAFE)
 # =========================================
 elif page == "🔍 Object Detection":
-    st.title("🔍 Object Detection")
+    st.title("🔍 Object Detection (Demo Mode)")
+    st.info("⚠ YOLO model disabled for Streamlit Cloud. Showing demo detections.")
 
     uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file:
-        # Load image
+        # Display uploaded image
         image = Image.open(uploaded_file)
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        # Run ONNX YOLO
-        results = model.predict(image)
+        # Fake detection output
+        st.subheader("🧪 Demo Detection Results")
+        st.json({
+            "Fire Extinguisher": 1,
+            "First Aid Box": 1,
+            "Oxygen Tank": 0,
+            "Nitrogen Tank": 0,
+            "Emergency Phone": 1
+        })
 
-        # Render YOLO output
-        result_img = results[0].plot()
+        st.success("✔ Detection complete (demo mode).")
 
-        st.markdown("### 🦅 YOLOv8 Output")
-        st.image(result_img, use_column_width=True)
-
-        # Count detections
-        class_counts = {}
-        for box in results[0].boxes:
-            cls_id = int(box.cls)
-            class_name = model.names[cls_id]
-            class_counts[class_name] = class_counts.get(class_name, 0) + 1
-
-        st.subheader("📦 Objects Detected")
-        st.json(class_counts)
-
-        # Download the prediction
+        # Fake output download
         buf = io.BytesIO()
-        Image.fromarray(result_img).save(buf, format="PNG")
+        image.save(buf, format="PNG")
         st.download_button(
-            "⬇ Download Prediction",
-            data=buf.getvalue(),
-            file_name="prediction.png",
-            mime="image/png"
+            "⬇ Download Output",
+            buf.getvalue(),
+            "prediction_demo.png",
+            "image/png"
         )
+
 
 # =========================================
 # TRAINING RESULTS PAGE
 # =========================================
 elif page == "📊 Training Results":
     st.title("📊 Training Results & Graphs")
+
     results_dir = "training_results"
 
     # Show CSV
@@ -136,17 +118,15 @@ elif page == "📊 Training Results":
     else:
         st.warning("results.csv not found!")
 
-    # Show training graphs
+    # Show graphs
     st.subheader("📈 Training Curves")
-    graph_files = [
-        f for f in os.listdir(results_dir)
-        if f.endswith(".png") and f != "results.png"
-    ]
-    if graph_files:
-        for g in graph_files:
-            st.image(os.path.join(results_dir, g), caption=g)
+    if os.path.exists(results_dir):
+        for f in os.listdir(results_dir):
+            if f.endswith(".png"):
+                st.image(os.path.join(results_dir, f), caption=f)
     else:
-        st.warning("No graphs found in training_results/")
+        st.warning("training_results/ folder missing.")
+
 
 # =========================================
 # SAVED PREDICTIONS PAGE
@@ -155,12 +135,13 @@ elif page == "🖼 Saved Predictions":
     st.title("🖼 Saved Prediction Samples")
 
     pred_dir = "predictions"
+
     if os.path.exists(pred_dir):
-        files = [f for f in os.listdir(pred_dir) if f.lower().endswith(("png", "jpg"))]
-        if files:
-            for f in files:
-                st.image(os.path.join(pred_dir, f), caption=f)
+        imgs = [f for f in os.listdir(pred_dir) if f.lower().endswith(("png", "jpg"))]
+        if imgs:
+            for i in imgs:
+                st.image(os.path.join(pred_dir, i), caption=i)
         else:
-            st.warning("No prediction images found!")
+            st.warning("No prediction images found.")
     else:
-        st.error("predictions/ folder not found!")
+        st.error("predictions/ folder missing.")
